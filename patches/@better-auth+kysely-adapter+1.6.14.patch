@@ -1,0 +1,91 @@
+diff --git a/node_modules/@better-auth/kysely-adapter/dist/bun-sqlite-dialect-DzNwOpKv.mjs b/node_modules/@better-auth/kysely-adapter/dist/bun-sqlite-dialect-DzNwOpKv.mjs
+index adfbfd3..bdfe3cb 100644
+--- a/node_modules/@better-auth/kysely-adapter/dist/bun-sqlite-dialect-DzNwOpKv.mjs
++++ b/node_modules/@better-auth/kysely-adapter/dist/bun-sqlite-dialect-DzNwOpKv.mjs
+@@ -1,4 +1,9 @@
+-import { CompiledQuery, DEFAULT_MIGRATION_LOCK_TABLE, DEFAULT_MIGRATION_TABLE, DefaultQueryCompiler, sql } from "kysely";
++import { CompiledQuery, DefaultQueryCompiler, sql } from "kysely";
++
++const DEFAULT_MIGRATION_TABLE = "__kysely_migration";
++const DEFAULT_MIGRATION_LOCK_TABLE = "__kysely_migration_lock";
++
++
+ //#region src/bun-sqlite-dialect.ts
+ var BunSqliteAdapter = class {
+ 	get supportsCreateIfNotExists() {
+@@ -10,8 +15,8 @@ var BunSqliteAdapter = class {
+ 	get supportsReturning() {
+ 		return true;
+ 	}
+-	async acquireMigrationLock() {}
+-	async releaseMigrationLock() {}
++	async acquireMigrationLock() { }
++	async releaseMigrationLock() { }
+ 	get supportsOutput() {
+ 		return true;
+ 	}
+diff --git a/node_modules/@better-auth/kysely-adapter/dist/d1-sqlite-dialect-C2B7YsIT.mjs b/node_modules/@better-auth/kysely-adapter/dist/d1-sqlite-dialect-C2B7YsIT.mjs
+index 1545e42..ed939ac 100644
+--- a/node_modules/@better-auth/kysely-adapter/dist/d1-sqlite-dialect-C2B7YsIT.mjs
++++ b/node_modules/@better-auth/kysely-adapter/dist/d1-sqlite-dialect-C2B7YsIT.mjs
+@@ -1,6 +1,12 @@
+-import { DEFAULT_MIGRATION_LOCK_TABLE, DEFAULT_MIGRATION_TABLE, SqliteAdapter, SqliteQueryCompiler } from "kysely";
++import { SqliteAdapter, SqliteQueryCompiler } from "kysely";
++
++const DEFAULT_MIGRATION_TABLE = "__kysely_migration";
++const DEFAULT_MIGRATION_LOCK_TABLE = "__kysely_migration_lock";
++
++
++
+ //#region src/d1-sqlite-dialect.ts
+-var D1SqliteAdapter = class extends SqliteAdapter {};
++var D1SqliteAdapter = class extends SqliteAdapter { };
+ var D1SqliteDriver = class {
+ 	#config;
+ 	#connection;
+@@ -23,8 +29,8 @@ var D1SqliteDriver = class {
+ 	async rollbackTransaction() {
+ 		throw new Error("D1 does not support interactive transactions. Use the D1 batch() API instead.");
+ 	}
+-	async releaseConnection() {}
+-	async destroy() {}
++	async releaseConnection() { }
++	async destroy() { }
+ };
+ var D1SqliteConnection = class {
+ 	#db;
+@@ -90,7 +96,7 @@ var D1SqliteIntrospector = class {
+ 		return { tables: await this.getTables(options) };
+ 	}
+ };
+-var D1SqliteQueryCompiler = class extends SqliteQueryCompiler {};
++var D1SqliteQueryCompiler = class extends SqliteQueryCompiler { };
+ var D1SqliteDialect = class {
+ 	#config;
+ 	constructor(config) {
+diff --git a/node_modules/@better-auth/kysely-adapter/dist/node-sqlite-dialect.mjs b/node_modules/@better-auth/kysely-adapter/dist/node-sqlite-dialect.mjs
+index 878100c..6f194f7 100644
+--- a/node_modules/@better-auth/kysely-adapter/dist/node-sqlite-dialect.mjs
++++ b/node_modules/@better-auth/kysely-adapter/dist/node-sqlite-dialect.mjs
+@@ -1,4 +1,9 @@
+-import { CompiledQuery, DEFAULT_MIGRATION_LOCK_TABLE, DEFAULT_MIGRATION_TABLE, DefaultQueryCompiler, sql } from "kysely";
++import { CompiledQuery, DefaultQueryCompiler, sql } from "kysely";
++const DEFAULT_MIGRATION_TABLE = "__kysely_migration";
++const DEFAULT_MIGRATION_LOCK_TABLE = "__kysely_migration_lock";
++
++
++
+ //#region src/node-sqlite-dialect.ts
+ var NodeSqliteAdapter = class {
+ 	get supportsCreateIfNotExists() {
+@@ -10,8 +15,8 @@ var NodeSqliteAdapter = class {
+ 	get supportsReturning() {
+ 		return true;
+ 	}
+-	async acquireMigrationLock() {}
+-	async releaseMigrationLock() {}
++	async acquireMigrationLock() { }
++	async releaseMigrationLock() { }
+ 	get supportsOutput() {
+ 		return true;
+ 	}
