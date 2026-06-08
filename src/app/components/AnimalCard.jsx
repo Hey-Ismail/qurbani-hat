@@ -1,8 +1,9 @@
 // import React from 'react';
+"use client";
 import { Button } from "@heroui/react";
 import Link from "next/link";
-const AnimalCard = ({ animalData }) => {
 
+const AnimalCard = ({ animalData }) => {
     const {
         id,
         name,
@@ -14,8 +15,11 @@ const AnimalCard = ({ animalData }) => {
         image,
         category,
     } = animalData;
+
+
     return (
         <div>
+
             <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm w-auto hover:shadow-lg">
 
 
@@ -81,7 +85,7 @@ const AnimalCard = ({ animalData }) => {
                             </p>
                         </div>
 
-                        <Link href={`/animals/${id}`}>
+                        <Link href={`/all-animals/${id}`}>
                             <Button className="bg-green-700 text-white hover:bg-green-800 rounded-xl">
                                 View Details
                             </Button>
