@@ -1,15 +1,45 @@
 "use client"
-// import React from 'react';
-// import { Navbar } from "@heroui-pro/react";
+
 import { Button } from "@heroui/react";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { authClient } from "@/lib/auth-client";
 
 
 const Navbar = () => {
-
+    const { data: session } = authClient.useSession();
+    const user = session?.user;
     const [isOpen, setIsOpen] = useState(false);
+    const userName = user?.name || user?.email?.split("@")[0] || "User";
+    const userInitial = userName.charAt(0).toUpperCase();
+
+    const handleLogout = async () => {
+        await authClient.signOut();
+        setIsOpen(false);
+    };
+
+    const userPreview = (
+        <div className="flex items-center gap-3">
+            {user?.image ? (
+                <Image
+                    src={user.image}
+                    alt={userName}
+                    width={40}
+                    height={40}
+                    className="h-10 w-10 rounded-full object-cover ring-2 ring-green-100"
+                />
+            ) : (
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 font-semibold text-green-800 ring-2 ring-green-100">
+                    {userInitial}
+                </div>
+            )}
+            <div className="flex flex-col leading-tight">
+                <span className="font-semibold text-gray-900">{userName}</span>
+            </div>
+        </div>
+    );
 
     return (
         <nav className="border-b bg-white shadow-sm">
@@ -38,17 +68,31 @@ const Navbar = () => {
 
 
                 <div className="hidden items-center gap-4 md:flex">
-                    <Link href="/auth/signin">
-                        <Button className="rounded-lg bg-green-800">
-                            Login
-                        </Button>
-                    </Link>
+                    {user ? (
+                        <>
+                            {userPreview}
+                            <Button
+                                onClick={handleLogout}
+                                className="rounded-lg border-2 border-red-200 bg-white text-red-600 hover:bg-red-600 hover:text-white  hover:border-white"
+                            >
+                                Logout
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Link href="/auth/signin">
+                                <Button className="rounded-lg bg-green-800">
+                                    Login
+                                </Button>
+                            </Link>
 
-                    <Link href="/auth/signup">
-                        <Button className="rounded-lg border-2 border-green-800 bg-white text-green-800">
-                            Register
-                        </Button>
-                    </Link>
+                            <Link href="/auth/signup">
+                                <Button className="rounded-lg border-2 border-green-800 bg-white text-green-800">
+                                    Register
+                                </Button>
+                            </Link>
+                        </>
+                    )}
                 </div>
 
                 <button
@@ -78,23 +122,39 @@ const Navbar = () => {
                             All Animals
                         </Link>
 
-                        <Link
-                            href="/auth/signin"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            <Button className="w-full rounded-lg bg-green-800">
-                                Login
-                            </Button>
-                        </Link>
+                        {user ? (
+                            <>
+                                <div className="rounded-xl border border-green-100 bg-green-50 px-3 py-3">
+                                    {userPreview}
+                                </div>
+                                <Button
+                                    onClick={handleLogout}
+                                    className="w-full rounded-lg border-2 border-red-200 bg-white text-red-600"
+                                >
+                                    Logout
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    href="/auth/signin"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <Button className="w-full rounded-lg bg-green-800">
+                                        Login
+                                    </Button>
+                                </Link>
 
-                        <Link
-                            href="/auth/signup"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            <Button className="w-full rounded-lg border-2 border-green-800 bg-white text-green-800">
-                                Register
-                            </Button>
-                        </Link>
+                                <Link
+                                    href="/auth/signup"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <Button className="w-full rounded-lg border-2 border-green-800 bg-white text-green-800">
+                                        Register
+                                    </Button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             )}
@@ -106,12 +166,3 @@ const Navbar = () => {
 export default Navbar;
 
 
-{/* <div className="flex flex-wrap gap-3">
-    <Button>Primary</Button>
-    <Button variant="secondary">Secondary</Button>
-    <Button variant="tertiary">Tertiary</Button>
-    <Button variant="outline">Outline</Button>
-    <Button variant="ghost">Ghost</Button>
-    <Button variant="danger">Danger</Button>
-    <Button variant="danger-soft">Danger Soft</Button>
-</div> */}
