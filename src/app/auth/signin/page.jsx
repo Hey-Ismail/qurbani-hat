@@ -3,14 +3,47 @@
 import Link from "next/link";
 import { Button, Input } from "@heroui/react";
 import { useForm } from "react-hook-form";
+import { authClient } from "@/lib/auth-client";
+import { toast, Zoom } from "react-toastify";
+import { useSearchParams } from "next/navigation";
 
 const SignInPage = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const searchParams = useSearchParams();
+    const redirectPath = searchParams.get("redirect") || "/";
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm()
+    const handleSignInForm = async (data) => {
+        const { data: res, error } = await authClient.signIn.email({
+            email: data.email, // required
+            password: data.password, // required
+            rememberMe: true,
+            callbackURL: redirectPath,
+        });
+        console.log(res, error);
 
-    const handleSignInForm = (data) => {
-        // console.log(data);
+        if (error) {
+            toast.error('email or password missmatched', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Zoom,
+            });
+        }
+
+
     }
+    const handleaGoogleSignIn = async () => {
+        const data = await authClient.signIn.social({
+            provider: "google",
+            callbackURL: redirectPath,
+        });
+        console.log(data);
+    };
 
     // console.log(watch('email'));
     // console.log(watch('password'));
@@ -63,7 +96,7 @@ const SignInPage = () => {
                     <div className="h-px flex-1 bg-gray-200"></div>
                 </div>
 
-                <Button
+                <Button onClick={handleaGoogleSignIn}
                     variant="bordered"
                     className="h-12 w-full"
                     radius="lg"
@@ -84,6 +117,6 @@ const SignInPage = () => {
             </div>
         </div >
     );
-}
+};
 
 export default SignInPage;

@@ -4,19 +4,55 @@ import Link from "next/link";
 import { Button, Input } from "@heroui/react";
 import { User } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { authClient } from "@/lib/auth-client";
+import { toast, Zoom } from "react-toastify";
+import { router } from "better-auth/api";
+import { redirect } from "next/navigation";
 
 const RegisterPage = () => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
-    const handleRegisterForm = (data) => {
-        // console.log(data);
-    };
+    const handleRegisterForm = async (data) => {
+        console.log(data);
+        const { email, name, photoUrl, password } = data;
 
-    // console.log(watch("name"));
-    // console.log(watch("email"));
-    // console.log(watch("photoUrl"));
-    // console.log(watch("password"));
+        // console.log(watch("name"));
+        // console.log(watch("email"));
+        // console.log(watch("photoUrl"));
+        // console.log(watch("password"));
 
+        const { data: res, error } = await authClient.signUp.email({
+            name: name, // required
+            email: email, // required
+            password: password, // required
+            image: photoUrl,
+            callbackURL: "/auth/signin",
+        })
+        console.log(res, error);
+
+        if (!error) {
+            toast.success('Registration successful!', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Zoom,
+            });
+            redirect("/auth/signin");
+        }
+
+    }
+
+    const handleGoogleSignUp = async () => {
+        const data = await authClient.signIn.social({
+            provider: "google",
+        })
+        console.log(data);
+    }
     return (
         <div className="min-h-[80vh] bg-linear-to-br from-green-50 to-white flex items-center justify-center px-4">
 
@@ -89,6 +125,9 @@ const RegisterPage = () => {
                     >
                         Register
                     </Button>
+                    {
+
+                    }
                 </form>
 
                 {/* Divider */}
@@ -99,12 +138,12 @@ const RegisterPage = () => {
                 </div>
 
                 {/* Google */}
-                <Button
+                <Button onClick={handleGoogleSignUp}
                     variant="bordered"
                     className="w-full h-12"
                     radius="lg"
                 >
-                    Continue with Google
+                    Continue with <span className="hover:text-green-700">Google</span>
                 </Button>
 
                 {/* Footer */}
@@ -122,5 +161,7 @@ const RegisterPage = () => {
         </div>
     );
 };
+
+
 
 export default RegisterPage;
