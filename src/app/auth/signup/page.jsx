@@ -6,7 +6,6 @@ import { User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
 import { toast, Zoom } from "react-toastify";
-import { router } from "better-auth/api";
 import { redirect } from "next/navigation";
 
 const RegisterPage = () => {
