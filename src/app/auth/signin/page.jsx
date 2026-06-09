@@ -24,7 +24,7 @@ const SignInPage = () => {
         if (error) {
             toast.error('email or password missmatched', {
                 position: "top-center",
-                autoClose: 5000,
+                autoClose: 4000,
                 hideProgressBar: false,
                 closeOnClick: false,
                 pauseOnHover: true,
